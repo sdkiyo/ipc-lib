@@ -15,6 +15,8 @@
 
 #include <sys/syscall.h>
 
+#include "colors.h"
+
 //#include <stdlib.h>
 //#include <sys/types.h>
 //#include <sys/stat.h>

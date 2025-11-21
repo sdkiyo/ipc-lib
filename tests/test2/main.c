@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <dlfcn.h>
 #include <unistd.h>
-#include "../../include/ipc_interface.h"
+#include "../../includes/ipc_interface.h"
 
 
 
@@ -13,24 +13,26 @@ int main()
 
 	void* ipc_lib = dlopen("./lib_ipc_test.so", RTLD_LAZY);
 
-	shm_create = dlsym(ipc_lib, "shm_create");
-	shm_open_exist = dlsym(ipc_lib, "shm_open_exist");
+	shmCreate = dlsym(ipc_lib, "shmCreate");
+	shmOpenExist = dlsym(ipc_lib, "shmOpenExist");
 
-	shm_rewrite = dlsym(ipc_lib, "shm_rewrite");
-	shm_write = dlsym(ipc_lib, "shm_write");
-	shm_clear = dlsym(ipc_lib, "shm_clear");
+	shmRewrite = dlsym(ipc_lib, "shmRewrite");
+	shmWrite = dlsym(ipc_lib, "shmWrite");
+	shmClear = dlsym(ipc_lib, "shmClear");
 
-	shm_close = dlsym(ipc_lib, "shm_close");
-	shm_destroy = dlsym(ipc_lib, "shm_destroy");
+	shmClose = dlsym(ipc_lib, "shmClose");
+	shmDestroy = dlsym(ipc_lib, "shmDestroy");
 
-	ipc_get_fd = dlsym(ipc_lib, "ipc_get_fd");
+	ipcShareFd = dlsym(ipc_lib, "ipcShareFd");
+	ipcGetFd = dlsym(ipc_lib, "ipcGetFd");
+	shmGetData = dlsym(ipc_lib, "shmGetData");
 
 
 	SharedMemoryAttributes shmAttributes = {};
 
 	int fd = 0;
 
-	ipc_get_fd(&shmAttributes, "test2", "test2.info", &fd);
+	ipcGetFd(&shmAttributes, "test2", "test2.info", &fd);
 
 	printf("new fd: %d\n", fd);
 
@@ -42,9 +44,9 @@ int main()
 
 
 	getchar();
-	shm_close(&shmAttributes);
+	shmClose(&shmAttributes);
 	printf("closed\n");
-	//shm_destroy(&shmAttributes);
+	//shmDestroy(&shmAttributes);
 
 	dlclose(ipc_lib);
 

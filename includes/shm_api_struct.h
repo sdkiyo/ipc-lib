@@ -6,16 +6,16 @@
 typedef struct SharedMemoryData {
 	const char*	pName;
 	void*		pMappedAddr;
-	off_t		byte_size;
+	off_t		byteSize;
 	int		fd;
-	uint8_t		name_len;
+	uint8_t		nameLen;
 } SharedMemoryData;
 
 typedef struct SharedMemoryAttributes {
 	SharedMemoryData	shmMain;
 	SharedMemoryData	shmInfo;
 	sem_t*			pSemaphore;
-	size_t			writed_bytes;
+	size_t			writedBytes;
 } SharedMemoryAttributes;
 
 

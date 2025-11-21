@@ -1,12 +1,12 @@
 #include <shm_api.h>
 
 
-int shm_destroy(SharedMemoryAttributes *const pAttributes)
+int shmDestroy(SharedMemoryAttributes *const pAttributes)
 {
 	errno = 0;
 	sem_wait(pAttributes->pSemaphore);
 
-	if (munmap(pAttributes->shmMain.pMappedAddr, pAttributes->shmMain.byte_size) == -1)
+	if (munmap(pAttributes->shmMain.pMappedAddr, pAttributes->shmMain.byteSize) == -1)
 	{
 		printf("\033[31mmunmap() (main) failed\033[0m\n");
 		return -1;
@@ -18,7 +18,7 @@ int shm_destroy(SharedMemoryAttributes *const pAttributes)
 		return -1;
 	}
 
-	if (munmap(pAttributes->shmInfo.pMappedAddr, pAttributes->shmInfo.byte_size) == -1)
+	if (munmap(pAttributes->shmInfo.pMappedAddr, pAttributes->shmInfo.byteSize) == -1)
 	{
 		printf("\033[31mmunmap() (info) failed\033[0m\n");
 		return -1;

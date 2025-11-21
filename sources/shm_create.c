@@ -1,17 +1,17 @@
 #include <shm_api.h>
 
 
-int shm_create(const char *const pMainName, const char *const pInfoName, const off_t desired_byte_size, SharedMemoryAttributes *const pAttributes)
+int shmCreate(const char *const pMainName, const char *const pInfoName, const off_t desiredByteSize, SharedMemoryAttributes *const pAttributes)
 {
 	errno = 0;
 	pAttributes->shmMain.pName = pMainName;
 	pAttributes->shmInfo.pName = pInfoName;
 
-	pAttributes->shmMain.name_len = strlen(pMainName);
-	pAttributes->shmInfo.name_len = strlen(pInfoName);
+	pAttributes->shmMain.nameLen = strlen(pMainName);
+	pAttributes->shmInfo.nameLen = strlen(pInfoName);
 
-	pAttributes->shmInfo.byte_size = sizeof(off_t);
-	pAttributes->shmMain.byte_size = desired_byte_size;
+	pAttributes->shmInfo.byteSize = sizeof(off_t);
+	pAttributes->shmMain.byteSize = desiredByteSize;
 
 	pAttributes->pSemaphore = sem_open(pMainName, O_CREAT|O_EXCL, 0777, 1);
 
@@ -47,7 +47,7 @@ int shm_create(const char *const pMainName, const char *const pInfoName, const o
 		return -1;
 	}
 
-	pAttributes->shmInfo.pMappedAddr = mmap(nullptr, pAttributes->shmInfo.byte_size, PROT_WRITE|PROT_READ, MAP_SHARED, pAttributes->shmInfo.fd, 0);
+	pAttributes->shmInfo.pMappedAddr = mmap(nullptr, pAttributes->shmInfo.byteSize, PROT_WRITE|PROT_READ, MAP_SHARED, pAttributes->shmInfo.fd, 0);
 
 	if (pAttributes->shmInfo.pMappedAddr == MAP_FAILED)
 	{
@@ -55,9 +55,9 @@ int shm_create(const char *const pMainName, const char *const pInfoName, const o
 		return -1;
 	}
 
-	ftruncate(pAttributes->shmInfo.fd, pAttributes->shmInfo.byte_size);
+	ftruncate(pAttributes->shmInfo.fd, pAttributes->shmInfo.byteSize);
 
-	memcpy(pAttributes->shmInfo.pMappedAddr, &desired_byte_size, pAttributes->shmInfo.byte_size);
+	memcpy(pAttributes->shmInfo.pMappedAddr, &desiredByteSize, pAttributes->shmInfo.byteSize);
 
 
 	pAttributes->shmMain.fd = shm_open(pAttributes->shmMain.pName, O_CREAT|O_RDWR|O_EXCL, 0777);
@@ -75,7 +75,8 @@ int shm_create(const char *const pMainName, const char *const pInfoName, const o
 
 		return -1;
 	}
-	pAttributes->shmMain.pMappedAddr = mmap(nullptr, pAttributes->shmMain.byte_size, PROT_WRITE|PROT_READ, MAP_SHARED, pAttributes->shmMain.fd, 0);
+
+	pAttributes->shmMain.pMappedAddr = mmap(nullptr, pAttributes->shmMain.byteSize, PROT_WRITE|PROT_READ, MAP_SHARED, pAttributes->shmMain.fd, 0);
 
 	if (pAttributes->shmMain.pMappedAddr == MAP_FAILED)
 	{
@@ -83,7 +84,7 @@ int shm_create(const char *const pMainName, const char *const pInfoName, const o
 		return -1;
 	}
 
-	ftruncate(pAttributes->shmMain.fd, pAttributes->shmMain.byte_size);
+	ftruncate(pAttributes->shmMain.fd, pAttributes->shmMain.byteSize);
 
 
 	sem_post(pAttributes->pSemaphore);

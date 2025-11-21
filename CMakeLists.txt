@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 4.1.2)
 
 project(test1 LANGUAGES C)
@@ -27,6 +28,4 @@ target_compile_options(ipc_test PRIVATE -Werror -Wall -Wextra)
 
 
 add_executable(${PROJECT_NAME} main.c)
-add_executable(program test2.c)
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra)
-target_compile_options(program PRIVATE -Werror -Wall -Wextra)

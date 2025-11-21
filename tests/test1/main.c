@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <dlfcn.h>
-#include "../../include/ipc_interface.h"
+#include "../../includes/ipc_interface.h"
 
 
 int main()
@@ -9,40 +9,46 @@ int main()
 
 	void* ipc_lib = dlopen("./lib_ipc_test.so", RTLD_LAZY);
 
-	shm_create = dlsym(ipc_lib, "shm_create");
-	shm_open_exist = dlsym(ipc_lib, "shm_open_exist");
+	shmCreate = dlsym(ipc_lib, "shmCreate");
+	shmOpenExist = dlsym(ipc_lib, "shmOpenExist");
 
-	shm_rewrite = dlsym(ipc_lib, "shm_rewrite");
-	shm_write = dlsym(ipc_lib, "shm_write");
-	shm_clear = dlsym(ipc_lib, "shm_clear");
+	shmRewrite = dlsym(ipc_lib, "shmRewrite");
+	shmWrite = dlsym(ipc_lib, "shmWrite");
+	shmClear = dlsym(ipc_lib, "shmClear");
 
-	shm_close = dlsym(ipc_lib, "shm_close");
-	shm_destroy = dlsym(ipc_lib, "shm_destroy");
+	shmClose = dlsym(ipc_lib, "shmClose");
+	shmDestroy = dlsym(ipc_lib, "shmDestroy");
+
+	ipcGetFd = dlsym(ipc_lib, "ipcGetFd");
+	ipcShareFd = dlsym(ipc_lib, "ipcShareFd");
+	shmGetData = dlsym(ipc_lib, "shmGetData");
 
 	SharedMemoryAttributes shmAttributes = {};
-	//shm_create("test", "test.info", 24, &shmAttributes);
-	shm_open_exist("test", "test.info", 12, &shmAttributes);
+	shmCreate("test", "test.info", 24, &shmAttributes);
+	//shmOpenExist("test", "test.info", 12, &shmAttributes);
 
 	char msg1[] = "test msg";
 	char msg2[] = "TEST_MSG_2";
 
 	getchar();
-	shm_rewrite(&shmAttributes, msg1, sizeof(msg1), 0);
+	shmRewrite(&shmAttributes, msg1, sizeof(msg1), 0);
 	printf("rewrited\n");
 
 	getchar();
-	shm_write(&shmAttributes, msg2, sizeof(msg2), 2);
+	shmWrite(&shmAttributes, msg2, sizeof(msg2), 2);
 	printf("writed\n");
 
 	getchar();
-	shm_clear(&shmAttributes);
+	shmClear(&shmAttributes);
 	printf("clear\n");
 
 
+//	getchar();
+//	shmClose(&shmAttributes);
+//	printf("closed\n");
 	getchar();
-	shm_close(&shmAttributes);
-	printf("closed\n");
-	//shm_destroy(&shmAttributes);
+	shmDestroy(&shmAttributes);
+	printf("destroyed\n");
 
 
 	printf("\033[2mtest1\033[0m\n");
